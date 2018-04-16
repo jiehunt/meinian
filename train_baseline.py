@@ -12,19 +12,6 @@ test_vid = test['vid']
 
 # train = train.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
 
-lgb_params = {
-        'task' : 'train',
-        'boosting_type' : 'gbdt',
-        'objective' : 'regression',
-        'metric' : {'l2'},
-        'num_leaves' : 31,
-        'learning_rate' : 0.1,
-        'feature_fraction' : 0.9,
-        'bagging_fraction' : 0.8,
-        'bagging_freq': 5,
-        'verbose': 1
-       # 'scale_pos_weight':40., # because training data is extremely unbalanced
-}
 
 target = [ 'Systolic', 'Diastolic', 'triglyceride', 'HDL', 'LDL' ]
 
@@ -87,12 +74,53 @@ pred = pd.DataFrame()
 pred_test = pd.DataFrame()
 scores = []
 
+lgb_param_s = {
+        'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
+        'metric' : {'l2'},
+        'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
+        'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
+       # 'scale_pos_weight':40., # because training data is extremely unbalanced
+}
+lgb_param_d = {
+        'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
+        'metric' : {'l2'},
+        'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
+        'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
+       # 'scale_pos_weight':40., # because training data is extremely unbalanced
+}
+lgb_param_t = {
+        'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
+        'metric' : {'l2'},
+        'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
+        'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
+       # 'scale_pos_weight':40., # because training data is extremely unbalanced
+}
+lgb_param_h = {
+        'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
+        'metric' : {'l2'},
+        'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
+        'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
+       # 'scale_pos_weight':40., # because training data is extremely unbalanced
+}
+lgb_param_l = {
+        'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
+        'metric' : {'l2'},
+        'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
+        'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
+       # 'scale_pos_weight':40., # because training data is extremely unbalanced
+}
+lgb_param_set = { 'Systolic': lgb_param_s ,
+              'Diastolic': lgb_param_d ,
+              'triglyceride': lgb_param_t,
+              'HDL': lgb_param_h,
+              'LDL': lgb_param_l
+              }
 for class_name in target:
     dtrain = lgb.Dataset(X_train, label=y_train[class_name].values)
     dvalid = lgb.Dataset(X_valid, label=y_valid[class_name].values)
     evals_results = {}
     print ("goto train", class_name)
-    bst = lgb.train(lgb_params,
+    bst = lgb.train(lgb_param_set[class_name],
                     dtrain,
                     valid_sets=dvalid,
                     evals_result=evals_results,
