@@ -6,9 +6,8 @@ from sklearn import preprocessing
 from sklearn.preprocessing import Imputer
 import numpy as np
 
-
-train=pd.read_csv('train_0415.csv',low_memory=False)
-test = pd.read_csv('test_0415.csv',low_memory=False)
+train=pd.read_csv('input/train_0415.csv',low_memory=False)
+test = pd.read_csv('input/test_0415.csv',low_memory=False)
 test_vid = test['vid']
 
 # train = train.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
@@ -37,6 +36,9 @@ train['triglyceride'] = train['triglyceride'].apply(lambda x: x if '>' not in st
 train['triglyceride'] = train['triglyceride'].apply(lambda x: float(x[:-1]) if str(x).endswith('.') else float(x))
 for class_name in target:
     train = train[np.isfinite(train[class_name])]
+    train = train[train[class_name] > 0]
+    train = train[train[class_name] < 300]
+print (train.shape)
 
 y_train = train[target]
 print (y_train.info())
@@ -83,6 +85,7 @@ X_train, X_valid, y_train, y_valid = train_test_split( x_train, y_train, test_si
 train_all = lgb.Dataset(x_train.values)
 pred = pd.DataFrame()
 pred_test = pd.DataFrame()
+scores = []
 
 for class_name in target:
     dtrain = lgb.Dataset(X_train, label=y_train[class_name].values)
@@ -101,12 +104,18 @@ for class_name in target:
 
     pred['pred_'+str(class_name)] = bst.predict(x_train)
     pred_test[str(class_name)] = bst.predict(test)
+    scores.append(bst.best_score['valid_0']['l2'])
+    print (bst.best_score['valid_0']['l2'])
 
 res = pd.DataFrame()
 res = pd.concat([y_train,pred], axis=1 )
 res.to_csv("res.csv", index=False)
 
+for i in range(0, len(scores)):
+    print (scores[i])
+
+print (np.mean(scores))
+
 sub = pd.concat([test_vid, pred_test], axis=1)
-# sub = sub.rename(columns={"Systolic":"收缩压" , "Diastolic":"舒张压" , "triglyceride":"血清甘油三酯", "HDL":"血清高密度脂蛋白", "LDL":"血清低密度脂蛋白"})
 sub.to_csv("submission.csv", index=False, header=False)
 
