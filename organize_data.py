@@ -20,8 +20,8 @@ def timer(name):
     print(f'[{name}] done in {time.time() - t0:.0f} s')
 
 with timer ("loading ..."):
-    train = pd.read_csv('input\test_0415.txt')
-    test = pd.read_csv('input\train_0415.txt')
+    test = pd.read_csv('input\test_0415.csv')
+    train = pd.read_csv('input\train_0415.csv')
 
 temp = pd.concat([train, test])
 cols = temp.columns
@@ -42,16 +42,16 @@ mapping ={
          '弃查'          :np.nan,
          '未做'          : np.nan,
         '未触及'            :np.nan,
-        '未触及 未触及'      :np.nan,
+        '未触及 未触及'      :np.nan, 
          '标本已退检'     : np.nan,
          '降脂后复查'     : np.nan, # 191
         '具体内容请见分析报告。':np.nan,
         '详见医生诊疗。'      :np.nan,
         '详见中医养生报告'   :np.nan,
-
-
+    
+    
         '已完成，建议复诊，咨询电话：52190566转588':1,
-
+    
          '-'             :0,
          '--'            :0,
          '- -'           :0,
@@ -63,7 +63,7 @@ mapping ={
          '阴性（-）'     :0,
          '阴性(-)'       :0,
          '阴性 阴性'      :0,
-         '阴性 -'         :0,
+         '阴性 -'         :0, 
          '- 阴性'         :0,
          '阴性（-） 阴性'  :0,
 
@@ -77,7 +77,7 @@ mapping ={
          '弱阳'          :1,  #  300036
          '弱阳性(±)'     :1,  #  300036
          '++'           :3,
-         '+++'          :4,
+         '+++'          :4, 
          '++++'         :5,
          '＋'           :2,
          '＋＋'          :3,
@@ -109,8 +109,8 @@ mapping ={
          '正常 正常 正常 正常 正常':0,
          '正常 正常 正常' :0,
          '异常'          :2,
-
-
+ 
+    
          '无 无'         :0,
          '未见'          :0,
          '无'            :0,
@@ -120,43 +120,43 @@ mapping ={
          '耐药'          :2,
          '中度敏感(MS)'  :3,
          '敏感'          :4,
-
+ 
          'Ⅰ'            :1,
          'Ⅱ'            :2,
          'Ⅲ'            :3,
          'Ⅳ'            :4,
-
+        
          '1+'            :1,
          '+1'            :1,
          '3+'            :3,
          '2+'            :2,
-
+    
          '无敏感菌'       :0,
          '中介'           :1,
          '中敏'           :2,
-
+    
          '5级'            :5,
          '4级'            :4,
          '3级'            :3,
          '2级'            :2,
          '1级'            :1,
          '0级'            :0,
-
+    
          '未检测到缺失。'   :0,
          '未检测到缺失'     :0,
          '基因缺失'        :1,
          '未检测到突变。'   :0,
          '基因突变，IVS-II-654位点突变基因杂合子。' :2,
-
+    
          '听力下降'        :1,
          '下降'            :1,
          '右耳听力下降可能' :1,
-
+         
          'HIV抗体阴性'     :0,
          'HIV抗体阴性(-)'   :0,
          'HIV感染待确定'    :1,
          '待复查'           :1,
-
+    
          'yellow'          :1,
          '黄色'            :1,
           '淡黄色'         :2,
@@ -166,20 +166,20 @@ mapping ={
           '白浊'           :6,
          '黑色'            :7,
          '淡红色'          :8,
-
+    
          '透明'            :0,
          '混浊'           :1,
          '浑浊'            :1,
-
+         
          '软'              :1,
          '软,糊状'          :2,
          '半稀便'          :3,
          '稀'              :4,
           '中'             :5,
           '硬'             :6,
-
+    
          'O'               :1,
-         'O型'             :1,
+         'O型'             :1, 
          '“O”型'           :1,
          '“O”'             :1,
          'O 型'            :1,
@@ -202,13 +202,13 @@ mapping ={
          'AB'              :4,
          'AB型'            :4,
          'AB 型'           :4,
-         '“AB”型'          :4,
+         '“AB”型'          :4, 
           '(AB)'           :4,
           '“AB”'           :4,
 
-
+    
          '女性肿瘤指标'     : -1, # 300076
-
+    
          '4.03 4.03'       :4.03,
          '2.1.'            :2.1,
          '9.871 9.87'      :9.871,
@@ -267,15 +267,15 @@ with timer ("mapping ..."):
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('<') else x)
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('﹤') else x)
     temp = temp.applymap(lambda x : x[:-1] if str(x).endswith('.') else x)
-
+    
 obj_list_4 = []
 obj_list = []
 
 unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(U/ml)', '%', '＜']
-def unit_transform_s(x):
+def unit_transform_s(x): 
     y = x
     for k in unit_mapping:
-        if str(x).endswith(k) > 0:
+        if str(x).endswith(k) > 0:    
             return str(x).strip(k)
     return y
 
@@ -283,7 +283,7 @@ def unit_transform_x(x):
     y = re.sub(r'^<(.*)', r'\1', str(x))
     return y
 def unit_transform_y(x):
-    y = re.sub(r'^>(.*)', r'\1', str(x))
+    y = re.sub(r'^>(.*)', r'\1', str(x))  
     return y
 def unit_transform_space(x):
     y = x
@@ -293,6 +293,8 @@ def unit_transform_space(x):
         try:
             if float(m.group(1)) == float(m.group(2)):
                 y = float(m.group(1))
+            else :
+                y = float(m.group(1)) + float(m.group(2)) /2
         except:
             y = x
     return y
@@ -317,30 +319,42 @@ for col in cols:
         try:
             temp[col] = temp[col].apply(lambda x : unit_transform_space(x) if str(x).find(' ')>0 else x)
         except:
-            print (col)
+            print (col)            
 
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         try:
             temp[col] = temp[col].apply(lambda x : unit_transform_s(x))
         except:
-            print (col)
+            print (col)          
 
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         obj_list.append(col)
-        try:
+        try:    
             temp[col] = temp[col].apply(lambda x : float(x) )
         except:
             print (col)
             obj_list_4.append(col)
-            print (pd.unique(temp[col]))
+            print (pd.unique(temp[col]))        
 
-data=temp
-train_new = data[data['vid'].isin(test['vid'].values)]
-test_new = data[data['vid'].isin(train['vid'].values)]
-train_new = train_new.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
-print (train_new.shape)
-print (test_new.shape)
-train_new.to_csv("train_041720.csv",encoding='utf-8', index=False )
-test_new.to_csv("test_041720.csv",encoding='utf-8', index=False )
+save_file = False
+if save_file == True:
+    data=temp
+    train_new = data[data['vid'].isin(train['vid'].values)]
+    test_new = data[data['vid'].isin(test['vid'].values)]
+    train_new = train_new.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
+    print (train_new.shape)
+    print (test_new.shape)
+    train_new.to_csv("train_041720.csv",encoding='utf-8', index=False )
+    test_new.to_csv("test_041720.csv",encoding='utf-8', index=False )
+
+obj_list_55 = []
+for col in cols:
+    if (np.array(temp[col]).dtype) == 'object':
+        div = len(pd.unique(temp[col]))
+        if (div < 6):
+            obj_list_55.append(col)
+            print (col)
+            print (pd.unique(temp[col]))
+print (len(obj_list_55))
