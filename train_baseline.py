@@ -6,19 +6,23 @@ from sklearn import preprocessing
 from sklearn.preprocessing import Imputer
 import numpy as np
 
+def my_error(pred, train_data):
+    labels = train_data.get_label()
+    res = np.power(np.log(pred + 1) - np.log(labels + 1) , 2)
+    return 'error', np.mean(res) , False
+
 # train=pd.read_csv('input/train_0415.csv',low_memory=False)
 # test = pd.read_csv('input/test_0415.csv',low_memory=False)
-train=pd.read_csv('input/train_041721.csv',low_memory=False)
-test = pd.read_csv('input/test_041721.csv',low_memory=False)
+train=pd.read_csv('input/train_041723.csv',low_memory=False)
+test = pd.read_csv('input/test_041723.csv',low_memory=False)
 test_vid = test['vid']
 
 # train = train.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
 
 
+
 target = [ 'Systolic', 'Diastolic', 'triglyceride', 'HDL', 'LDL' ]
 
-print (train.columns)
-print (test.columns)
 cols = list(set(train.columns)- set(target))
 
 train['triglyceride'] = train['triglyceride'].apply(lambda x: x if '>' not in str(x) else x[2:])
@@ -31,7 +35,9 @@ print (train.shape)
 
 y_train = train[target]
 print (y_train.info())
+print (train.info())
 x_train=train[cols].select_dtypes(include=['float64','int64'])
+print (x_train.shape)
 
 nouse_list = []
 for col in x_train.columns:
@@ -39,6 +45,7 @@ for col in x_train.columns:
         nouse_list.append(col)
 
 x_train=x_train.drop(nouse_list, axis=1)
+print (x_train.shape)
 
 test = test[x_train.columns]
 nouse_test_list = []
@@ -49,7 +56,7 @@ for col in test.columns:
 cols = list (set(x_train.columns) - set(nouse_test_list))
 x_train = x_train[cols]
 test = test[cols]
-print (x_train.columns)
+print (x_train.shape)
 
 # min_max_scaler = preprocessing.MinMaxScaler()
 #X_train_minmax = min_max_scaler.fit_transform(x_train)
@@ -78,14 +85,14 @@ scores = []
 
 lgb_param_s = {
         'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
-        'metric' : {'l2'},
-        'num_leaves' : 31*2, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
+        'metric' : {'error'},
+        'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
         'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
        # 'scale_pos_weight':40., # because training data is extremely unbalanced
 }
 lgb_param_d = {
         'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
-        'metric' : {'l2'},
+        'metric' : {'error'},
         'num_leaves' : 31, 'learning_rate' : 0.1, 'feature_fraction' : 0.9,
         'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
        # 'scale_pos_weight':40., # because training data is extremely unbalanced
@@ -129,13 +136,13 @@ for class_name in target:
                     num_boost_round=1000,
                     early_stopping_rounds=50,
                     verbose_eval=20,
-                    feval=None,
+                    feval=my_error,
                )
 
     pred['pred_'+str(class_name)] = bst.predict(x_train, num_iteration=bst.best_iteration)
     pred_test[str(class_name)] = bst.predict(test, num_iteration=bst.best_iteration)
-    scores.append(bst.best_score['valid_0']['l2'])
-    print (bst.best_score['valid_0']['l2'])
+    scores.append(bst.best_score['valid_0']['error'])
+    print (bst.best_score['valid_0']['error'])
 
 res = pd.DataFrame()
 res = pd.concat([y_train,pred], axis=1 )
@@ -143,9 +150,8 @@ res.to_csv("res.csv", index=False)
 
 for i in range(0, len(scores)):
     print (scores[i])
-
 print (np.mean(scores))
 
 sub = pd.concat([test_vid, pred_test], axis=1)
-sub.to_csv("submission_379.csv", index=False, header=False)
+sub.to_csv("submission_352041723.csv", index=False, header=False)
 

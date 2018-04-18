@@ -43,16 +43,16 @@ mapping ={
          '弃查'          :np.nan,
          '未做'          : np.nan,
         '未触及'            :np.nan,
-        '未触及 未触及'      :np.nan, 
+        '未触及 未触及'      :np.nan,
          '标本已退检'     : np.nan,
          '降脂后复查'     : np.nan, # 191
         '具体内容请见分析报告。':np.nan,
         '详见医生诊疗。'      :np.nan,
         '详见中医养生报告'   :np.nan,
-    
-    
+
+
         '已完成，建议复诊，咨询电话：52190566转588':1,
-    
+
          '-'             :0,
          '--'            :0,
          '- -'           :0,
@@ -64,7 +64,7 @@ mapping ={
          '阴性（-）'     :0,
          '阴性(-)'       :0,
          '阴性 阴性'      :0,
-         '阴性 -'         :0, 
+         '阴性 -'         :0,
          '- 阴性'         :0,
          '阴性（-） 阴性'  :0,
 
@@ -78,7 +78,7 @@ mapping ={
          '弱阳'          :1,  #  300036
          '弱阳性(±)'     :1,  #  300036
          '++'           :3,
-         '+++'          :4, 
+         '+++'          :4,
          '++++'         :5,
          '＋'           :2,
          '＋＋'          :3,
@@ -114,7 +114,7 @@ mapping ={
          '正常 正常 正常 正常 正常':0,
          '正常 正常 正常' :0,
          '异常'          :2,
- 
+
          '无 无'         :0,
          '未见'          :0,
          '无'            :0,
@@ -124,43 +124,43 @@ mapping ={
          '耐药'          :2,
          '中度敏感(MS)'  :3,
          '敏感'          :4,
- 
+
          'Ⅰ'            :1,
          'Ⅱ'            :2,
          'Ⅲ'            :3,
          'Ⅳ'            :4,
-        
+
          '1+'            :1,
          '+1'            :1,
          '3+'            :3,
          '2+'            :2,
-    
+
          '无敏感菌'       :0,
          '中介'           :1,
          '中敏'           :2,
-    
+
          '5级'            :5,
          '4级'            :4,
          '3级'            :3,
          '2级'            :2,
          '1级'            :1,
          '0级'            :0,
-    
+
          '未检测到缺失。'   :0,
          '未检测到缺失'     :0,
          '基因缺失'        :1,
          '未检测到突变。'   :0,
          '基因突变，IVS-II-654位点突变基因杂合子。' :2,
-    
+
          '听力下降'        :1,
          '下降'            :1,
          '右耳听力下降可能' :1,
-         
+
          'HIV抗体阴性'     :0,
          'HIV抗体阴性(-)'   :0,
          'HIV感染待确定'    :1,
          '待复查'           :1,
-    
+
          'yellow'          :1,
          '黄色'            :1,
           '淡黄色'         :2,
@@ -176,20 +176,20 @@ mapping ={
           '红色'           :8,
          '无色'            :10,
          '其他'            :11,
-         
+
          '透明'            :0,
          '混浊'           :1,
          '浑浊'            :1,
-         
+
          '软'              :1,
          '软,糊状'          :2,
          '半稀便'          :3,
          '稀'              :4,
           '中'             :5,
           '硬'             :6,
-    
+
          'O'               :1,
-         'O型'             :1, 
+         'O型'             :1,
          '“O”型'           :1,
          '“O”'             :1,
          'O 型'            :1,
@@ -213,23 +213,23 @@ mapping ={
          'AB'              :4,
          'AB型'            :4,
          'AB 型'           :4,
-         '“AB”型'          :4, 
+         '“AB”型'          :4,
           '(AB)'           :4,
           '“AB”'           :4,
-    
+
          '无神经定位体征'    :1,
          '右上下肢肌力减弱'  :2,
          '左肢肌力减弱'      :3,
          '无神经定位体征 无神经定位体征' :4,
-    
+
          '无压痛点'         :0,
          '叩击痛'           :1,
          '压痛'             :2,
          '叩击痛, 叩击痛'    :1,
          '压痛, 叩击痛'      :3,
-    
+
          '女性肿瘤指标'     : -1, # 300076
-    
+
          '4.03 4.03'       :4.03,
          '2.1.'            :2.1,
          '9.871 9.87'      :9.871,
@@ -321,7 +321,7 @@ mapping ={
         '见报告':np.nan,
         '巴氏I级,未见异常':0,
         '送检玻片一张，镜检：正常范围内，未见癌细胞。':1,
-        '送检玻片一张，镜检：上皮细胞量较少，建议复查。':1,  
+        '送检玻片一张，镜检：上皮细胞量较少，建议复查。':1,
         '送检玻片一张，镜检：上皮细胞量较少，建议复查。':1,
         '抽烟，不喝酒':1,
         '混合性红细胞':1,
@@ -340,19 +340,17 @@ mapping ={
         '（尿液）送检黄色液体约40ml，离心沉淀TCT制片一张，巴氏染色。镜下：见少量的尿路上皮细胞，未找到癌细胞。':0,
         '（尿液）送检黄色液体约45ml，TCT制片。镜检：中量鳞状上皮细胞及少量尿路上皮细胞，未见癌细胞。':0,
         'exit':0,
-        'I':1,  
+        'I':1,
         '萎缩性舌炎':1,
         '沟纹舌':2,
         '+/HP':np.nan,
         '＜20':16,
         '0':0,
         '3-5':4,
-        '查见':np.nan,  
+        '查见':np.nan,
         '十二指肠穿孔修补术术后':1,
-         '萎缩性舌炎' :1,
-        '沟纹舌':2,
          '右眼：角膜0.6mm，前房2.7mm，晶状体3.8mm，玻璃体14.9mm，眼轴24mm；左眼：角膜0.7mm，前房2.6mm，晶状体3.5mm，玻璃体14.6mm，眼轴23mm；':1,
-    
+
          }
 
 with timer ("mapping ..."):
@@ -361,15 +359,15 @@ with timer ("mapping ..."):
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('<') else x)
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('﹤') else x)
     temp = temp.applymap(lambda x : x[:-1] if str(x).endswith('.') else x)
-    
+
 obj_list_4 = []
 obj_list = []
 
 unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(U/ml)', '%', '＜']
-def unit_transform_s(x): 
+def unit_transform_s(x):
     y = x
     for k in unit_mapping:
-        if str(x).endswith(k) > 0:    
+        if str(x).endswith(k) > 0:
             return str(x).strip(k)
     return y
 
@@ -377,7 +375,7 @@ def unit_transform_x(x):
     y = re.sub(r'^<(.*)', r'\1', str(x))
     return y
 def unit_transform_y(x):
-    y = re.sub(r'^>(.*)', r'\1', str(x))  
+    y = re.sub(r'^>(.*)', r'\1', str(x))
     return y
 def unit_transform_space(x):
     y = x
@@ -413,24 +411,24 @@ for col in cols:
         try:
             temp[col] = temp[col].apply(lambda x : unit_transform_space(x) if str(x).find(' ')>0 else x)
         except:
-            print (col)            
+            print (col)
 
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         try:
             temp[col] = temp[col].apply(lambda x : unit_transform_s(x))
         except:
-            print (col)          
+            print (col)
 
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         obj_list.append(col)
-        try:    
+        try:
             temp[col] = temp[col].apply(lambda x : float(x) )
         except:
             print (col)
             obj_list_4.append(col)
-            print (pd.unique(temp[col]))        
+            print (pd.unique(temp[col]))
 
 save_file = False
 if save_file == True:
