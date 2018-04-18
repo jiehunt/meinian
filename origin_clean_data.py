@@ -15,9 +15,16 @@ import numpy as np
 
 # In[2]:
 
-
-get_ipython().run_cell_magic('time', '', 'data=pd.read_csv(\'cleaned_data_0418.csv\',low_memory=False)\ndata = data.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})\ntest_lenth=9538\ntest=data[-test_lenth:]\ntrain=data[:-test_lenth]\ntest_vid = test[\'vid\']\ntarget=train.columns[1:6]\nprint (train.columns)\nprint (test.columns)\ncols = list(set(train.columns)- set(target))')
-
+data=pd.read_csv('cleaned_data_0418.csv',low_memory=False)
+data = data.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
+test_lenth=9538
+test=data[-test_lenth:]
+train=data[:-test_lenth]
+test_vid = test['vid']
+target=train.columns[1:6]
+print (train.columns)
+print (test.columns)
+cols = list(set(train.columns)- set(target))
 
 # In[3]:
 
@@ -55,7 +62,7 @@ def my_error(pred, train_data):
 
 lgb_param_s = {
         'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
-        'metric' : {'l2'},
+        'metric' : {'error'},
         'num_leaves' : 31*2, 'learning_rate' : 0.05, 'feature_fraction' : 0.9,
         'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
        # 'scale_pos_weight':40., # because training data is extremely unbalanced
