@@ -54,6 +54,10 @@ for col in test.columns:
         nouse_test_list.append(col)
 
 cols = list (set(x_train.columns) - set(nouse_test_list))
+
+nouse2_list=['0203','0209','0702','0703','0705','0706','0709','0726','0730','0731','3601',
+             '1308','1316']
+
 x_train = x_train[cols]
 test = test[cols]
 print (x_train.shape)
@@ -154,4 +158,43 @@ print (np.mean(scores))
 
 sub = pd.concat([test_vid, pred_test], axis=1)
 sub.to_csv("submission_352041723.csv", index=False, header=False)
+
+# from sklearn.model_selection import GridSearchCV, GroupKFold
+
+# param_grid = {
+#     'num_leaves': [31, 63, 127, 255],
+#     'feature_fraction': [i/10 for i in range(6,9)],
+#     'bagging_fraction':  [i/100 for i in range(75,95,5)],
+# #     'bagging_freq': [5, 10,15]
+# }
+# class_name =  [ 'triglyceride' ]
+# # dtrain = lgb.Dataset(X_train, label=Y_train[class_name].values)
+# # dvalid = lgb.Dataset(X_valid, label=Y_valid[class_name].values)
+
+# lgb_estimator = lgb.LGBMRegressor(boosting_type='gbdt',
+#                                   objective='regression',
+#                                   bagging_freq=5,
+#                                   num_boost_round=200,
+# #                                   early_stopping_rounds=50,
+#                                   learning_rate=0.1,
+#                                   eval_metric='error',
+#                                   verbose_eval=50,
+
+#                                   device='gpu',
+#                                   gpu_platform_id= 0,
+#                                   gpu_device_id=0,
+#                                  )
+# #                                   categorical_feature=[Xcols.index(col) for col in categoricals])#,
+# #                                   early_stopping_rounds=5) # REMOVING THIS ARGUMENT MAKES THE CODE RUN OKAY
+    
+# gsearch = GridSearchCV(estimator=lgb_estimator, 
+#                        param_grid=param_grid, 
+                       
+#                        cv=5) 
+
+# lgb_model = gsearch.fit(X=X_train, 
+#                         y=Y_train['triglyceride'].values,
+#                        )
+
+# print(lgb_model.best_params_, lgb_model.best_score_)
 
