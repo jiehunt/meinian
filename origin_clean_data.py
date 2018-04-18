@@ -14,7 +14,7 @@ import numpy as np
 
 
 # In[2]:
-
+#数据集已经上传到git
 data=pd.read_csv('cleaned_data_0418.csv',low_memory=False)
 data = data.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
 test_lenth=9538
