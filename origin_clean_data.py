@@ -29,10 +29,11 @@ cols = list(set(train.columns)- set(target))
 # In[3]:
 
 
+a=train[target].describe(percentiles=[.005,.05,.10,.20,.25,.5,.75,.95,.99,.995])
 for class_name in target:
     train = train[np.isfinite(train[class_name])]
-    train = train[train[class_name] > 0]
-    train = train[train[class_name] < 300]
+    train = train[train[class_name] > a.iloc[4,:][class_name]]
+    train = train[train[class_name] < a.iloc[-2,:][class_name]]
 y_train = train[target]
 
 x_train=train[cols].select_dtypes(include=['float64'])
@@ -82,7 +83,7 @@ lgb_param_t = {
        # 'scale_pos_weight':40., # because training data is extremely unbalanced
 }
 lgb_param_h = {
-        'task' : 'train', 'boosting_type' : 'gbdt', 'objective' : 'regression',
+        'task' : 'train', 'boosting_type' : 'dart', 'objective' : 'regression',
         'metric' : {'l2'},
         'num_leaves' : 31, 'learning_rate' : 0.05, 'feature_fraction' : 0.9,
         'bagging_fraction' : 0.8, 'bagging_freq': 5, 'verbose': 1
