@@ -198,3 +198,45 @@ sub.to_csv("submission_352041723.csv", index=False, header=False)
 
 # print(lgb_model.best_params_, lgb_model.best_score_)
 
+# import xgboost as xgb
+# params = {
+#               'booster' : 'gbtree',
+#               'max_depth' : 7,
+#               'gamma' : 0,
+#               'eta' : 0.05,
+#               'nthread' : 4,
+#              'subsample':0.9,
+#               'seed' : 1001,
+# #     'eval_metric': 'myerror'
+#               }
+# scores = []
+# cv_folds = 3
+# dtrain_all = xgb.DMatrix(x_train)
+# dtest = xgb.DMatrix(test)
+# for class_name in target:
+#     dtrain = xgb.DMatrix(X_train, label=Y_train[class_name].values)
+#     dvalid = xgb.DMatrix(X_valid, label=Y_valid[class_name].values)
+#     evals_results = {}
+#     evallist  = [(dtrain,'train'), (dvalid,'eval')]
+#     print ("goto train", class_name)
+#     bst=xgb.train(params,dtrain, 
+#          evals=evallist, num_boost_round=2000, obj=None, feval=xgb_error, maximize=False, 
+#           early_stopping_rounds=50, evals_result=evals_results, 
+#                   verbose_eval=50)
+
+#     pred['pred_'+str(class_name)] = bst.predict(dtrain_all)
+#     pred_test[str(class_name)] = bst.predict(dtest)
+#     print (bst.best_score)
+#     scores.append(bst.best_score)
+# #     print (evals_results)
+
+# res = pd.DataFrame()
+# res = pd.concat([y_train,pred], axis=1 )
+# res.to_csv("res.csv", index=False)
+
+# for i in range(0, len(scores)):
+#     print (scores[i])
+# print (np.mean(scores))
+
+# sub = pd.concat([test_vid, pred_test], axis=1)
+# sub.to_csv("submission_352041720_2.csv", index=False, header=False)
