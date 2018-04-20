@@ -33,6 +33,7 @@ mapping ={
          '详见图文报告'  : np.nan,
          '详见报告单。'  : np.nan,
          '见纸质报告单'   : np.nan,
+         '详见纸质报告单。 ':np.nan,
          '见报告单'      :np.nan,
          '见图文报告'    :np.nan,
          '详见纸质报告单' :np.nan,
@@ -102,6 +103,7 @@ mapping ={
          '未发现异常'     :0,
          '自述不查'       :0,
          '未发现异常, 未发现异常' :0,
+         'e未见明显异常'   :0,
          '未检'           :np.nan,
          '未见异常 未见异常' :0,
          '未见 未见'      :0,
@@ -282,6 +284,45 @@ mapping ={
           '1.84 1.93'      :1.84,
          '10.3 14.6'       :10.3,
          '6.93 9.67'       :6.93,
+         '3.69 3.69'       :3.69,
+         #300151
+         '3--6'            :4.5,
+         '阴性1-4'          :2.5,
+         #300134
+         ',5.00'           :5,
+          '＞600.00'       :601,
+         #30013
+         '6.31.0.45'       :6.31,
+         #2406
+         'nan 54.50 54.50' :54.5,
+         #2405
+         '未查 28.40'       :28.4,
+         'nan 28.50 28.50'  :28.5,
+         #2404
+          '158 弃查'        :np.nan,
+          '未查 171'        :171,
+          '172 未查'        :172,
+          '175 弃查'       :np.nan,
+          '160.5 160.5 nan' : 160.5,
+         #2403
+         '60 弃查'         :np.nan,
+         '75 未查'         :75,
+          '未查 83'        :83,
+          '71 弃查'        :71,
+          '73.5 73.5 nan' :73.5,
+         #1873
+          '1.58 1.58 1.58' : 1.58,
+          '＜0.10'       :0.09,
+          '＜0.30'       :0.29,
+         #1815
+          '21.00 21.00 21.00' :21,
+          '18.00 18.00 18.00' :18,
+         'CLT1D'    : np.nan,
+         #10004
+          '.3.70'    :3.7,
+    
+          '1、7.71'   :7.71,
+    
          '0':0,
         '0':0,
         '0-1':1,
@@ -350,7 +391,78 @@ mapping ={
         '查见':np.nan,
         '十二指肠穿孔修补术术后':1,
          '右眼：角膜0.6mm，前房2.7mm，晶状体3.8mm，玻璃体14.9mm，眼轴24mm；左眼：角膜0.7mm，前房2.6mm，晶状体3.5mm，玻璃体14.6mm，眼轴23mm；':1,
+   
+         #2409
+         '17.5% (正常值 12-22%)':17.5,
+         '26.5% (正常值 11-21%)' :26.5,
+         '26.9(正常值 12-22%)'   :26.9,
+         '26.6% (正常值 21-34%)' :26.6,
+         '25.1% (正常值 12-22%)' :25.1,
+         '42.8% (正常值 12-22%)' :42.8,
+         '25% (正常值 12-22%)'   :25,
+         '20.8% (正常值 12-22%)' :20.8,
+         # A704
+         '脂肪肝'              : np.nan,
+         # A701
+         '6,3'                :6.3,
+         #709018
+          '80.285.2'          :80.285,
+         # 
+          '***.**'            :np.nan,
+          '**.*'              :np.nan,
+          
+         # 339123
+         '0.01(阳性)'         :0.01,
+    
+         '189 脂血'         :  189,
+        # 300084
+         '11.80/'            :11.8,
+         '008.70r'         :8.7,
+         '0.84 <0.1'        :0.84,
+        # 2233
+         '可疑'              :1,
+         '阴性（-） 阴性（-）' :1,
+         # 2229
+         '极弱阳'            :1,
+          '阳性(低水平)'      :1,
+          '重度'             :10,
+         # 2228
+         '阴性(-) 阴性(-)'    :0.9,
+         '+ +'               :1.1,
+         '＜18.4'            :18.3,
+         '＜73.40'           :73,
+         '＜0.07'            :0.06,
+         # 1471
+         '137..00'           :137,
+         # 1363
+         '=10'               :10,
+         '＜10'               :9,
+         '＜10.00'            :9, 
+         # '0424'
+#          '90--100次/分'       :95,
+#          '心动过缓54次/分'     :54,
+#          '心率正常'           :80,
+#          '85次/分, 心率正常'   :85,
+#          '94/分'             :94,
+#          '心动过缓56'         :56,
+#          ',80'              :80,
+#          '窦性心动过速106'    :106,
+#           '66/min'           :66,
+#           '70/分'            :70,
+#           '窦性心动过缓58'     :58,
+#           '心动过缓( 58  次/分)' :58,
+          # 0104
+         '心内各结构未见明显异常'  :215,
+    
+          'fo'                 :np.nan,
+          '0..52'              :0.52,
+          '- +'                  :1,
+          
 
+          '+无' : np.nan,
+          '正常 13.48':13.48,
+          '16.98 正常' :16.98,
+          
          }
 
 with timer ("mapping ..."):
@@ -359,11 +471,12 @@ with timer ("mapping ..."):
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('<') else x)
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('﹤') else x)
     temp = temp.applymap(lambda x : x[:-1] if str(x).endswith('.') else x)
-
+    
+import re
 obj_list_4 = []
 obj_list = []
 
-unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(U/ml)', '%', '＜']
+unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(μIU/ml)','(U/ml)','(umol/L)', '%', '＜']
 def unit_transform_s(x):
     y = x
     for k in unit_mapping:
@@ -389,6 +502,67 @@ def unit_transform_space(x):
                 y = float(m.group(1)) + float(m.group(2)) /2
         except:
             y = x
+    return y
+
+def unit_transform_space2(x):
+    y = x
+    p = re.compile(r'^(\d.*) (\d.*) (\d.*)')
+    m =  p.match(x)
+    if m:
+        y = float(m.group(1))
+    return y
+
+def unit_transform_nan(x):
+    y = x
+    p = re.compile(r'^(\d.*) (nan)')
+    q = re.compile(r'^(nan) (\d.*)')
+    m =  p.match(x)
+    n =  q.match(x)
+    if m:
+        try:
+            y = float(m.group(1))
+        except:
+            y = x
+    elif n:
+        print(x)
+        try:
+            y = float(n.group(2))
+            print (y)
+        except:
+            y = x
+    
+    return y
+
+def unit_transform_min(x):
+    y = x
+    p = re.compile(r'^(\d.*)-(\d.*)')
+    m =  p.match(x)
+    if m:
+        try:
+            y = np.abs(float(m.group(1)) - float(m.group(2)) )
+        except:
+            y = x
+    return y
+
+def unit_transform_per(x):
+    y = x
+    p = re.compile(r'^(\d.*)% \((.*)')
+    m =  p.match(x)
+    if m:
+        print (m.group(1))
+        y = float(m.group(1))
+    return y
+
+def unit_transform_yinyang(x):
+    y = x
+    p = re.compile(r'阳性 (\d.*)')
+    q = re.compile(r'阴性 (\d.*)')
+    m =  p.match(x)
+    n =  q.match(x)
+    if m:
+        y = float(m.group(1))
+    elif n:
+        y = float(n.group(1))
     return y
 
 cols = list(set(cols) - set(['vid']))
@@ -419,7 +593,30 @@ for col in cols:
             temp[col] = temp[col].apply(lambda x : unit_transform_s(x))
         except:
             print (col)
+            
+s_cols = ['312','819007', '300151', '269013']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : str(x).split()[0] if str(x).find(' ')>0 else x)
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_min(str(x)) if pd.notnull(x) else x)
+    
+s_cols = ['2406','2405', '2404', '2403','2409', '2420', '2412']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_nan(str(x)) if pd.notnull(x) else x)
+    
 
+s_cols = ['1815', '155', '1474','139']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_space2(str(x)) if pd.notnull(x) else x)
+         
+s_cols = ['2409']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_per(str(x)) if pd.notnull(x) else x)
+    
+s_cols = ['2233', '2231', '2229', '2228', '2230']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_yinyang(str(x)) if pd.notnull(x) else x)
+    
+    
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         obj_list.append(col)
@@ -450,3 +647,35 @@ for col in cols:
             print (col)
             print (pd.unique(temp[col]))
 print (len(obj_list_55))
+
+# cols = temp.columns
+# obj_list = []
+# for col in cols:
+#     if temp[col].dtype == 'object':
+#         uniq = pd.unique(temp[col])
+# #         print (uniq.shape[0])
+#         if uniq.shape[0] > 100 and uniq.shape[0] < 500:
+#             print (col)
+#             print (temp[col].value_counts())
+# #             print ("   JIEHUNT ")
+#             obj_list.append(col)
+# #0101, 0102,
+#     
+# #0434, 1001,0115
+# 
+# print (len(obj_list))
+
+# cols = temp.columns
+# obj_list = []
+# for col in cols:
+#     if temp[col].dtype == 'object':
+#         uniq = pd.unique(temp[col])
+# #         print (uniq.shape[0])
+#         if uniq.shape[0] > 100 and uniq.shape[0] < 47736:
+#             print (col)
+# #             new_col = col + '_cnt'
+# #             gp = temp[[col,'vid']].groupby(by=[col])[['vid']].count().reset_index().rename(columns={'vid': new_col})
+# #             temp = temp.merge(gp, on=[col], how='left')
+# #             temp[new_col] = temp[new_col].fillna(0).astype('int')
+# #             print ("   JIEHUNT ")
+#             obj_list.append(col)
