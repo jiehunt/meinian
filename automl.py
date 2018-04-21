@@ -38,14 +38,14 @@ ml_test=test.select_dtypes(include=['float64'])
 
 
 ddd=train.select_dtypes(include=['float64'])
-a,b= train_test_split(ddd, test_size=0.25, random_state=42)
-c=a.sample(5000)
+train_ml,test_ml= train_test_split(ml_train, test_size=0.15, random_state=42)
+
 
 
 # In[29]:
 
 
-
+score=[
 from auto_ml import Predictor
 from auto_ml.utils import get_boston_dataset
 predictions=pd.DataFrame()
@@ -65,11 +65,16 @@ for classname in target:
     file_name = ml_predictor.save()
     trained_model = load_ml_model(file_name)
     predictions[classname] = trained_model.predict(ml_test[test_cols])
+    score[classname] = trained_model.predict(test[test_cols])
     print('****** over to train ')
 
 
 # In[31]:
-
+mm=[]
+for class_name in target:
+    print(np.mean(np.power(np.log(score[class_name].values + 1) - np.log(test_ml[class_name].values + 1) , 2)))
+    mm.append(np.mean(np.power(np.log(score[class_name].values + 1) - np.log(test_ml[class_name].values + 1) , 2)))
+print("平均得分为",np.mean(mm))
 
 
 sub=pd.DataFrame()
@@ -81,9 +86,5 @@ sub.to_csv("automl_421_12.csv", index=False, header=False)
 # In[4]:
 
 
-mm=[]
-for class_name in target:
-    print(np.mean(np.power(np.log(predictions[class_name].values + 1) - np.log(b[class_name].values + 1) , 2)))
-    mm.append(np.mean(np.power(np.log(predictions[class_name].values + 1) - np.log(b[class_name].values + 1) , 2)))
-print(np.mean(mm))
+
 
