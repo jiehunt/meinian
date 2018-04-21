@@ -32,7 +32,7 @@ ml_test=test.select_dtypes(include=['float64'])
 
 
 train_ml,test_ml= train_test_split(ml_train, test_size=0.15, random_state=42)
-sam=train.sample(5000)
+sam=ml_train.sample(5000)
 
 
 # In[29]:
