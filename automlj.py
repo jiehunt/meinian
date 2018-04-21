@@ -60,7 +60,7 @@ for classname in target:
     print('****** start to train ')
     print(classname)
 
-    cols=list(set(ml_train.columns)-set(target)+ set([classname]))
+    cols=list(set(ml_train.columns)-(set(target)- set([classname])))
     column_descriptions = {
         classname:'output',
     }
