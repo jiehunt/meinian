@@ -30,22 +30,15 @@ y_train = train[target]
 ml_train=train.select_dtypes(include=['float64'])
 ml_test=test.select_dtypes(include=['float64'])
 
-# print ("OK")
-# X_train, X_valid, y_train, y_valid = train_test_split( x_train, y_train, test_size=0.25, random_state=42)
 
-
-# In[2]:
-
-
-ddd=train.select_dtypes(include=['float64'])
 train_ml,test_ml= train_test_split(ml_train, test_size=0.15, random_state=42)
-
+sam=train.sample(5000)
 
 
 # In[29]:
 
 
-score=[
+score=[]
 from auto_ml import Predictor
 from auto_ml.utils import get_boston_dataset
 predictions=pd.DataFrame()
@@ -60,7 +53,7 @@ for classname in target:
     }
     
     ml_predictor = Predictor(type_of_estimator = 'regressor',column_descriptions = column_descriptions)
-    ml_predictor.train(ml_train[cols],model_names=['LGBMRegressor'],feature_learning=True, fl_data=c,verbose=False)
+    ml_predictor.train(ml_train[cols],model_names=['LGBMRegressor'],feature_learning=True, fl_data=sam,verbose=False)
     from auto_ml.utils_models import load_ml_model
     file_name = ml_predictor.save()
     trained_model = load_ml_model(file_name)
