@@ -38,7 +38,7 @@ sam=ml_train.sample(5000)
 # In[29]:
 
 
-score=[]
+score=pd.DataFrame()
 from auto_ml import Predictor
 from auto_ml.utils import get_boston_dataset
 predictions=pd.DataFrame()
