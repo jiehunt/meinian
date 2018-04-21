@@ -38,7 +38,7 @@ sam=ml_train.sample(5000)
 # In[29]:
 
 
-score=[]
+score=pd.DataFrame()
 from auto_ml import Predictor
 from auto_ml.utils import get_boston_dataset
 predictions=pd.DataFrame()
@@ -58,7 +58,7 @@ for classname in target:
     file_name = ml_predictor.save()
     trained_model = load_ml_model(file_name)
     predictions[classname] = trained_model.predict(ml_test[test_cols])
-    score[classname] = trained_model.predict(test[test_cols])
+    score[classname] = trained_model.predict(test_ml[test_cols])
     print('****** over to train ')
 
 
