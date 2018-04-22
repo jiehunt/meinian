@@ -2,8 +2,13 @@
 # coding: utf-8
 
 # In[32]:
-
-
+import time
+import pandas as pd
+import gc
+import numpy as np
+import os
+from contextlib import contextmanager
+import re
 import pandas as pd
 import numpy as np
 data=pd.read_csv('float_clean_data.csv',low_memory=False)
@@ -13,50 +18,10 @@ test=data[-test_lenth:]
 train=data[:-test_lenth]
 test_vid = test['vid']
 target=train.columns[2:7]
-print (train.columns)
-print (test.columns)
+
 cols = list(set(train.columns)- set(target))
-lie=pd.read_csv('fuhao.csv',header=None)
-part=train.select_dtypes(include=['object'])
-num=set(part.columns)-set(lie[0])
-part=part[list(num)]
-coll=[]
-for i in part.columns:
-    #print('******'+str(i)+'*****')
-   # print(part_num[i].unique()[0:10])
-    if len(part[i].unique())>1:
-        coll.append(i)
-part_num=part[coll]
 vid=data['vid']
-
-
-# In[33]:
-
-
-data_object=data.select_dtypes(include=['object'])
-lie=pd.read_csv('fuhao.csv',header=None)
-part=data_object.select_dtypes(include=['object'])
-num=set(part.columns)-set(lie[0])
-part=part[list(num)]
-coll=[]
-for i in part.columns:
-    #print('******'+str(i)+'*****')
-   # print(part_num[i].unique()[0:10])
-    if len(part[i].unique())>1:
-        coll.append(i)
-part_num=part[coll]
-
-
-# In[34]:
-
-
-import time
-import pandas as pd
-import gc
-import numpy as np
-import os
-from contextlib import contextmanager
-
+temp=data[cols].select_dtypes(include=['object'])
 os.environ["OMP_NUM_THREADS"] = "4"
 os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 
@@ -73,7 +38,7 @@ def timer(name):
 # with timer ("loading ..."):
 # #     test = pd.read_csv('test_041717.csv')
 # #     train = pd.read_csv('train_041717.csv')
-temp=part_num
+
 # temp = pd.concat([train, test])
 cols = temp.columns
 mapping ={
@@ -421,6 +386,22 @@ mapping ={
     '0.96 0.78':0.8,
      '1..27':1.27,
      '0.04 0.04' :0.04,  
+    '﹢':0,
+    '50.4 50.4':50.4,
+ '79.6 79.6':79.6,
+    '心内各结构未见明显异常':np.nan,
+'脂肪肝':80,
+ '6.31.0.45'   :6.31,
+'未查 1.0':np.nan,
+'***.**':np.nan,
+'弃查 弃查':np.nan,
+'阳性(低水平)':np.nan,
+'- +':np.nan,
+'＜0.30':0.0,
+'可疑'     :np.nan, 
+    '**.*' :np.nan, 
+'60 弃查':60,
+'fo':np.nan,
          }
 
 with timer ("mapping ..."):
@@ -433,7 +414,10 @@ with timer ("mapping ..."):
 obj_list_4 = []
 obj_list = []
 
-unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(U/ml)', '%', '＜']
+
+
+
+unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(U/ml)', '%', '＜','kg','(umol/L)']
 def unit_transform_s(x):
     y = x
     for k in unit_mapping:
@@ -483,43 +467,6 @@ for col in cols:
         except:
             print (col)
 
- 
-
-def clean(x):
-    x=str(x)
-    if  '<' in x :
-        return float(x[x.index('<')+1:])
-    if  '>' in x :
-        return float(x[x.index('>')+1:])
-    if  '＜' in x :
-        return float(x[x.index('＜')+1:])
-    if  '＜=' in x :
-        return float(x[x.index('＜=')+1:])
-    if  '\t' in  x :
-        return float(x[x.index('\t')+1:])
-    if len(x.split(sep='.'))>2:#2.2.8
-        i=x.rindex('.')
-        x=x[0:i]+x[i+1:]
-        return float(x)
-    if '未做' in x or '未查' in x or '弃查' in x:
-        return np.nan
-    if str(x).isdigit()==False and len(str(x))>4:
-        x=x[0:4]
-        return float(x)
-    
-    else:
-        return x
-    
-for col in cols:
-    if (np.array(temp[col]).dtype) == 'object':
-        try:
-            temp[col] = temp[col].apply(lambda x:clean(x))
-        except:
-            print (col)                 
-
-        
-            
-            
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         try:
@@ -527,6 +474,40 @@ for col in cols:
         except:
             print (col)
 
+def clean(x):
+    x=str(x)
+    try:
+        return re.findall(r"\d+\.?\d*", x)[0]     
+    except:
+        if  '<' in x :
+            return float(x[x.index('<')+1:])
+        if  '>' in x :
+            return float(x[x.index('>')+1:])
+        if  '＜' in x :
+            return float(x[x.index('＜')+1:])
+        if  '＜=' in x :
+            return float(x[x.index('＜=')+1:])
+        if  '\t' in  x :
+            return float(x[x.index('\t')+1:])
+        if len(x.split(sep='.'))>2:#2.2.8
+            i=x.rindex('.')
+            x=x[0:i]+x[i+1:]
+            return float(x)
+        if '未做' in x or '未查' in x or '弃查' in x:
+            return np.nan
+        if str(x).isdigit()==False and len(str(x))>4:
+            x=x[0:4]
+            return float(x)
+        else:
+            return x
+    
+for col in cols:
+    if (np.array(temp[col]).dtype) == 'object':
+        try:
+            temp[col] = temp[col].apply(lambda x:clean(x))
+        except:
+            print (col)                 
+            
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         obj_list.append(col)
@@ -537,24 +518,17 @@ for col in cols:
             obj_list_4.append(col)
             print (pd.unique(temp[col]))
 
-
-
-# In[238]:
-
-
-
+            
+            
 # obj_list_55 = []
 # for col in cols:
 #     if (np.array(temp[col]).dtype) == 'object':
 #         div = len(pd.unique(temp[col]))
-#         if (div <50):
+#         if (div<5 ):
 #             obj_list_55.append(col)
 #             print (col)
 #             print (pd.unique(temp[col]))
 # print (len(obj_list_55))
-
-
-z=temp.select_dtypes(include=['float64'])
-result=pd.concat([data, z], axis=1)
-result.to_csv('newfeature.csv',index=False)
-
+num=data.select_dtypes(include=['float64'])
+result=pd.concat([temp, num], axis=1)
+result.to_csv('newfeaturenight_test.csv',index=False,encoding='utf-8')
