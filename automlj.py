@@ -48,7 +48,6 @@ for classname in target:
     print(classname)
     temp = list(set(target)- set([classname]))
     cols=list(set(ml_train.columns)- set(temp))
-    test_cols=list(set(ml_train.columns.values)-set(target))
     column_descriptions = {
         classname:'output',
     }
@@ -57,18 +56,20 @@ for classname in target:
     ml_predictor.train(ml_train[cols],model_names=['LGBMRegressor'],feature_learning=True, fl_data=fl_data,verbose=False)
     file_name = ml_predictor.save()
     trained_model = load_ml_model(file_name)
-    predictions[classname] = trained_model.predict(ml_test[test_cols])
+    predictions[classname] = trained_model.predict(ml_test)
+    test_cols=list(set(ml_train.columns.values)-set(target))
     pred_valid[classname] = trained_model.predict(X_valid[test_cols])
     print('****** over to train ')
-
-# sub=pd.DataFrame()
-# sub['vid']=test_vid.values
-# sub = pd.concat([sub, predictions], axis=1)
-# sub.to_csv("automl_421_12.csv", index=False, header=False)
 
 mm=[]
 for class_name in target:
     print(np.mean(np.power(np.log(pred_valid[class_name].values + 1) - np.log(X_valid[class_name].values + 1) , 2)))
     mm.append(np.mean(np.power(np.log(pred_valid[class_name].values + 1) - np.log(X_valid[class_name].values + 1) , 2)))
 print(np.mean(mm))
+
+sub=pd.DataFrame()
+sub['vid']=test_vid.values
+sub = pd.concat([sub, predictions], axis=1)
+sub.to_csv("automl_cut_015.csv", index=False, header=False)
+
 
