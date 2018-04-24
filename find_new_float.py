@@ -404,18 +404,92 @@ mapping ={
 'fo':np.nan,
          }
 
+mapping2 = {
+    # 1321
+    '0.4 nan nan nan' : 0.4,
+    '未查 未查': np.nan,
+    'nan nan nan nan': np.nan,
+    'nan nan nan': np.nan,
+     'nan 1.2 nan nan nan':1.2,
+    'nan 1.0':1,
+    '1.0 nan':1,
+    'nan nan 1.5':1.5,
+    '失明' : 0,
+    '手动':np.nan,
+         '义眼':np.nan,
+    '0.1, 1.0':0.1,
+    '1.0 1.0 nan':1.0,
+    '0.8 0.8 0.8':0.8,
+    'nan 0.4 nan':0.4,
+    '0.6 nan nan':0.6,
+    'nan nan 0.4':0.6,
+    '0.25 0.25 0.25':0.25,
+     '1.2 1.2 1.2':1.2,
+    '1.0 1.0 1.0':1.0,
+    '0.6 0.6 0.6':0.6,
+    '1.5 1.5 1.5':1.5,
+    '无光感':0,
+    'nan 0.3 nan':0.3,
+    '0.8 nan nan':0.8,
+    'nan 1.0 nan':1.0,
+    'nan 0.05 nan':0.05,
+'nan nan 0.3':0.3,
+'未查 1.2':1.2,
+'nan nan nan nan 1.0':1.0,
+'0.7 0.7 0.7':0.7,
+'nan nan nan nan nan':np.nan,
+'1.0 nan nan':1.0,
+'0.7 0.7 0.7 0.7':0.7,
+'0.2 0.2 0.2':0.2,
+'1.0 nan nan 1.0 1.0':1.0,
+'nan 0.5 nan':0.5,
+'未要求检查 ':np.nan,
+'nan 0.6 nan':0.6,
+'nan nan 0.7':0.7,
+'0.6 nan nan nan nan':0.6,
+'0.6 0.6 0.6 0.6 0.6':0.6,
+'0.8 未查':0.8,
+'nan 1.5 nan nan':1.5,
+'未查 0.5':0.5,
+'0.9 0.9 0.9 0.9':0.9,
+'未查 0.3':0.3,
+'0.4 nan nan':0.4,
+'0.3 nan nan':0.3,
+'nan 0.15 nan':1.5,
+'nan 0.9 nan':0.9,
+'nan 1.5 nan':1.5,
+'nan 弃查':np.nan,
+'nan nan 0.5':0.5,
+'因无法配合不能检测':np.nan,
+'nan 0.8 nan':0.8,
+'0.7 nan nan':0.7,
+'nan nan 0.6':0.6,
+'0.9 nan nan':0.9,
+'未要求检查':np.nan,
+'0.3 0.3 0.3':0.3,
+'0.5 0.5 0.5':0.5,
+'0.6 0.6 0.6 0.6':0.6,
+'1.2 1.2 1.2 1.2':1.2,
+
+'阴性（-） 阴性（-）':1,
+    #'424'
+    '心率正常':80,
+    '窦性心动过缓':56,
+    '窦性心动过速':106,
+    '次/分' : np.nan,
+}
+
+
 with timer ("mapping ..."):
     temp = temp.applymap(lambda x : mapping[x] if x in mapping.keys() else x )
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('>') else x)
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('<') else x)
     # temp = temp.applymap(lambda x : x[1:] if str(x).startswith('﹤') else x)
     temp = temp.applymap(lambda x : x[:-1] if str(x).endswith('.') else x)
+    temp = temp.applymap(lambda x : mapping2[x] if x in mapping2.keys() else x )
 
 obj_list_4 = []
 obj_list = []
-
-
-
 
 unit_mapping = ['kpa', 'db/m', '(ng/mL)', '(pmol/L)', '(U/ml)', '%', '＜','kg','(umol/L)']
 def unit_transform_s(x):
@@ -508,6 +582,92 @@ for col in cols:
         except:
             print (col)                 
             
+def unit_transform_nan(x):
+    y = x
+    p = re.compile(r'^(\d.*) (nan)')
+    q = re.compile(r'^(nan) (\d.*)')
+    m =  p.match(x)
+    n =  q.match(x)
+    if m:
+        try:
+            y = float(m.group(1))
+        except:
+            y = x
+    elif n:
+        try:
+            y = float(n.group(2))
+        except:
+            y = x
+    
+    return y
+
+s_cols = ['1321']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_nan(str(x)) if pd.notnull(x) else x)
+    
+def unit_transform_yinyang(x):
+    y = x
+    p = re.compile(r'阳性 (\d.*)')
+    q = re.compile(r'阴性 (\d.*)')
+    m =  p.match(x)
+    n =  q.match(x)
+    if m:
+        y = float(m.group(1))
+    elif n:
+        y = float(n.group(1))
+    return y
+
+s_cols = ['2233', '2229']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_yinyang(str(x)) if pd.notnull(x) else x)
+    
+def unit_transform_xt(x):
+    y = x
+    p = re.compile(r'.*(\d{2,3})次/分.*')
+    m =  p.match(x)
+    q = re.compile(r'.*心动过缓(\d{2,3})')
+    n =  q.match(x)
+    if m:
+        try:
+            y = float(m.group(1))
+        except:
+            y = m.group(1)
+    elif n:
+        try:
+            y = float(n.group(1))
+        except:
+            y = n.group(1)
+    return y
+
+def unit_transform_xt2(x):
+    y = x
+    p = re.compile(r'^(\d{2,3}).*\D$')
+    m =  p.match(x)
+    if m:
+        try:
+            y = float(m.group(1))
+        except:
+            y = m.group(1)
+    return y
+
+def unit_transform_xt3(x):
+    y = x
+    p = re.compile(r'^\D*(\d{2,3}).*$')
+    m =  p.match(x)
+    if m:
+        try:
+            y = float(m.group(1))
+        except:
+            y = m.group(1)
+    return y
+
+s_cols = ['424']
+for s_col in s_cols:
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_xt(str(x)) if pd.notnull(x) else x)
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_xt2(str(x)) if pd.notnull(x) else x)
+    temp[s_col] = temp[s_col].apply(lambda x : unit_transform_xt3(str(x)) if pd.notnull(x) else x)
+
+
 for col in cols:
     if (np.array(temp[col]).dtype) == 'object':
         obj_list.append(col)
