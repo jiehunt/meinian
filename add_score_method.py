@@ -11,7 +11,7 @@ from auto_ml.utils import get_boston_dataset
 #path = '/home/onepanel/files/code/data/'
 data=pd.read_csv('newfeaturenight.csv',low_memory=False)
 
-data = data.rename(columns={"ÊÕËõÑ¹": "Systolic", "ÊæÕÅÑ¹": "Diastolic", "ÑªÇå¸ÊÓÍÈıõ¥":"triglyceride", "ÑªÇå¸ßÃÜ¶ÈÖ¬µ°°×":"HDL", "ÑªÇåµÍÃÜ¶ÈÖ¬µ°°×":"LDL"})
+data = data.rename(columns={"æ”¶ç¼©å‹": "Systolic", "èˆ’å¼ å‹": "Diastolic", "è¡€æ¸…ç”˜æ²¹ä¸‰é…¯":"triglyceride", "è¡€æ¸…é«˜å¯†åº¦è„‚è›‹ç™½":"HDL", "è¡€æ¸…ä½å¯†åº¦è„‚è›‹ç™½":"LDL"})
 dropcol=[1325,  425 , 437 ,3191 , 547 , 1321,  3203,  2233,  3485 , 30007 , 549, 424  ,459101 , 2229 ,901  ,1322 ,1326 ,3429 ,3430 , 459102 , 3194  ,3198 , 733, 212 , 2302]
 dropcol=[str(i) for i in dropcol]
 data=data.drop(dropcol,axis=1)
@@ -85,4 +85,9 @@ mm=[]
 for class_name in target:
     print(np.mean(np.power(np.log(score[class_name].values + 1) - np.log(test_ml[class_name].values + 1) , 2)))
     mm.append(np.mean(np.power(np.log(score[class_name].values + 1) - np.log(test_ml[class_name].values + 1) , 2)))
-print("Æ½¾ùµÃ·ÖÎª",np.mean(mm))    
+print("å¹³å‡å¾—åˆ†ä¸º",np.mean(mm))    
+
+sub=pd.DataFrame()
+sub['vid']=test_vid.values
+sub = pd.concat([sub, predictions], axis=1)
+sub.to_csv("automl_421_12.csv", index=False, header=False)
