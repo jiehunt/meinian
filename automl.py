@@ -6,13 +6,34 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from sklearn.preprocessing import Imputer
 import numpy as np
-data=pd.read_csv('float_clean_data.csv',low_memory=False)
+#float_clean_data also ok
+data=pd.read_csv('justtry.csv',low_memory=False)
 data = data.rename(columns={"收缩压": "Systolic", "舒张压": "Diastolic", "血清甘油三酯":"triglyceride", "血清高密度脂蛋白":"HDL", "血清低密度脂蛋白":"LDL"})
 test_lenth=9538
+
+
+
+string=data.select_dtypes(include=['object'])
+coo=[]
+for i in data.columns:
+    if len(data[i].unique())<3:
+        #print(ml_train[i].unique())
+        coo.append(i)
+data=data.drop(coo,axis=1)
+
+
+string_length=pd.DataFrame()
+for i in string.columns:
+    string_length[i]=string[i].apply(lambda x :len(str(x)))
+#string_length=string_length.drop(['vid'],axis=1)
+data=pd.concat([string_length,data.select_dtypes(include=['float64'])], axis=1)
+
+
+
 test=data[-test_lenth:]
 train=data[:-test_lenth]
 test_vid = test['vid']
-target=train.columns[2:7]
+target=["Systolic","Diastolic","triglyceride","HDL","LDL"]
 print (train.columns)
 print (test.columns)
 cols = list(set(train.columns)- set(target))
@@ -53,7 +74,7 @@ for classname in target:
     }
     
     ml_predictor = Predictor(type_of_estimator = 'regressor',column_descriptions = column_descriptions)
-    ml_predictor.train(ml_train[cols],model_names=['LGBMRegressor'],feature_learning=True, fl_data=sam,verbose=False)
+    ml_predictor.train(train_ml[cols],model_names=['LGBMRegressor'],feature_learning=True, fl_data=sam,verbose=False)
     from auto_ml.utils_models import load_ml_model
     file_name = ml_predictor.save()
     trained_model = load_ml_model(file_name)
@@ -73,10 +94,7 @@ print("平均得分为",np.mean(mm))
 sub=pd.DataFrame()
 sub['vid']=test_vid.values
 sub = pd.concat([sub, predictions], axis=1)
-sub.to_csv("automl_421_12.csv", index=False, header=False)
-
-
-# In[4]:
+sub.to_csv("automl.csv", index=False, header=False)
 
 
 
