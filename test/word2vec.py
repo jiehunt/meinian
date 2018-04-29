@@ -150,7 +150,8 @@ gc.collect()
 sub=pd.DataFrame()
 sub['vid']=test_vid.values
 sub = pd.concat([sub, predictions], axis=1)
-sub.to_csv("automlword2vec_keras_0.csv", index=False, header=False)
+file_name = str(model_type) + '_oof_test.csv'
+sub.to_csv(file_name, index=False, header=False)
 
 if gen_oof == True:
     oof = pd.DataFrame()
