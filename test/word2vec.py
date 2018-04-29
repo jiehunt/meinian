@@ -10,6 +10,7 @@ from auto_ml import Predictor
 from auto_ml.utils import get_boston_dataset
 from auto_ml.utils_models import load_ml_model
 import gc
+import datetime
 
 #float_clean_data also ok
 data=pd.read_csv('input/feature_042902.csv',low_memory=False)
@@ -108,6 +109,12 @@ fl_data=X_train.sample(5000)
 
 predictions=pd.DataFrame()
 pred_valid=pd.DataFrame()
+oof_pred = pd.DataFrame()
+gen_oof = True
+model_type = 'LGBMRegressor'
+# model_type = 'XGBRegressor'
+# model_type = 'DeepLearningRegressor'
+
 for classname in target:
     print('****** start to train ')
     print(classname)
@@ -118,12 +125,14 @@ for classname in target:
     }
 
     ml_predictor = Predictor(type_of_estimator = 'regressor',column_descriptions = column_descriptions)
-    ml_predictor.train(ml_train[cols],model_names=['LGBMRegressor'], feature_learning=True, fl_data=fl_data,verbose=False)
+    ml_predictor.train(ml_train[cols],model_names=[model_type], cv=9, feature_learning=True, fl_data=fl_data,verbose=False)
     file_name = ml_predictor.save()
     trained_model = load_ml_model(file_name)
     predictions[classname] = trained_model.predict(ml_test)
     test_cols=list(set(ml_train.columns.values)-set(target))
     pred_valid[classname] = trained_model.predict(X_valid[test_cols])
+    if gen_oof == True:
+        oof_pred[classname] = trained_model.predict(ml_train)
 
     del ml_predictor, trained_model
     gc.collect()
@@ -142,4 +151,16 @@ sub=pd.DataFrame()
 sub['vid']=test_vid.values
 sub = pd.concat([sub, predictions], axis=1)
 sub.to_csv("automlword2vec_keras_0.csv", index=False, header=False)
+
+if gen_oof == True:
+    oof = pd.DataFrame()
+    y_train = ml_train[target]
+    oof = pd.concat([y_trian, oof_pred], axis=1)
+    file_date = datetime.datetime.now().strftime("%m%d%H")
+    out_file = 'oof/'+str(model_type) + '_oof.csv'
+    if os.path.exists(out_file) == False:
+        oof.to_csv(out_file,index=False,encoding='utf-8')
+    else:
+        print ("Have org data")
+
 
