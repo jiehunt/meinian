@@ -1,4 +1,4 @@
-
+#!pip install --userautoml && pip install --user keras
 import pandas as pd
 from lightgbm import LGBMRegressor
 import lightgbm as lgb
