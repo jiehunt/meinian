@@ -93,7 +93,7 @@ print("平均得分为",np.mean(mm))
 sub=pd.DataFrame()
 sub['vid']=test_vid.values
 sub = pd.concat([sub, predictions], axis=1)
-sub.to_csv("automl.csv", index=False, header=False)
+sub.to_csv(str(round(np.mean(mm),4))+"automl.csv", index=False, header=False)
 
 
 
