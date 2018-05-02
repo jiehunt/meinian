@@ -24,8 +24,7 @@ data=data.drop(coo,axis=1)
 
 string_length=pd.DataFrame()
 for i in string.columns:
-    string_length[i]=string[i].apply(lambda x :len(str(x)))
-#string_length=string_length.drop(['vid'],axis=1)
+    string_length['length'_i]=string[i].apply(lambda x :len(str(x)))
 data=pd.concat([string_length,data.select_dtypes(include=['float64'])], axis=1)
 
 
